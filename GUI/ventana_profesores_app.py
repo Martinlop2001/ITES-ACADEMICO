@@ -1,7 +1,7 @@
 
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
-from ventana_profesores import Ui_Dialog  # Este es el archivo generado por pyuic5
+from ventana_profesores import Ui_Dialog  # archivo generado por pyuic5
 import sys
 
 
@@ -90,7 +90,6 @@ class VentanaProfesores(QDialog):
         self.ui.inputDireccion.clear()
 
 
-# Para testeo individual (opcional)
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     ventana_dummy = QMainWindow()

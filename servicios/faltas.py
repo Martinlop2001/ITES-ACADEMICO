@@ -66,7 +66,7 @@ def registrar_falta():
     if not fecha_input:
         fecha = datetime.today().strftime("%A - %d - %Y")
     else:
-        fecha = fecha_input  # Para mejorar, podés validar formato aquí
+        fecha = fecha_input  
 
     try:
         cursor.execute("""
