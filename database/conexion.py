@@ -6,7 +6,9 @@ import os
 DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'datos', 'ites_academico.db')
 
 def conectar():
+    conexion = sqlite3.connect("ites_academico.db")
     return sqlite3.connect(DB_PATH)
+    return conexion
 
 def crear_tablas():
     conexion = conectar()

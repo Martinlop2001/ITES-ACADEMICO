@@ -30,20 +30,12 @@ def agregar_profesor():
         conexion.close()
 
 def listar_profesores():
-    print("\n--- Lista de Profesores ---")
-    conexion = conectar()
-    cursor = conexion.cursor()
-
-    cursor.execute("SELECT id, nombre, apellido, dni, correo, direccion FROM profesor")
+    conn = sqlite3.connect('ites_academico.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM profesor")
     profesores = cursor.fetchall()
-
-    if profesores:
-        for p in profesores:
-            print(f"[{p[0]}] {p[1]} {p[2]} - DNI: {p[3]} - Correo: {p[4]} - Dirección: {p[5]}")
-    else:
-        print("No hay profesores registrados.")
-
-    conexion.close()
+    conn.close()
+    return profesores
 
 def editar_profesor():
     listar_profesores()
@@ -81,26 +73,12 @@ def editar_profesor():
     finally:
         conexion.close()
 
-def eliminar_profesor():
-    listar_profesores()
-    profesor_id = input("Ingrese el ID del profesor a eliminar: ")
-
-    confirmacion = input(f"¿Está seguro que desea eliminar al profesor con ID {profesor_id}? (s/n): ")
-    if confirmacion.lower() != 's':
-        print("Eliminación cancelada.")
-        return
-
-    conexion = conectar()
-    cursor = conexion.cursor()
-
-    try:
-        cursor.execute("DELETE FROM profesor WHERE id = ?", (profesor_id,))
-        conexion.commit()
-        print("Profesor eliminado correctamente.")
-    except Exception as e:
-        print("Error al eliminar profesor:", e)
-    finally:
-        conexion.close()
+def eliminar_profesor(id_profesor):
+    conn = sqlite3.connect('ites_academico.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM profesor WHERE id = ?", (id_profesor,))
+    conn.commit()
+    conn.close()
 
 
 
@@ -145,17 +123,11 @@ def obtener_profesores():
     conexion.close()
     return profesores
 
-def eliminar_profesor_por_dni(dni):
-    conexion = sqlite3.connect("ites_academico.db")
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM profesor WHERE dni = ?", (dni,))
-    profesor = cursor.fetchone()
-
-    if not profesor:
-        conexion.close()
-        return False
-
-    cursor.execute("DELETE FROM profesor WHERE dni = ?", (dni,))
-    conexion.commit()
-    conexion.close()
-    return True
+def eliminar_profesor_por_id(id_profesor):
+    conn = sqlite3.connect("ites_academico.db")
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM profesor WHERE id = ?", (id_profesor,))
+    conn.commit()
+    filas_afectadas = cursor.rowcount
+    conn.close()
+    return filas_afectadas > 0

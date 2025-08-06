@@ -182,8 +182,8 @@
   <widget class="QPushButton" name="btnAgregarProfesor">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>390</y>
+     <x>210</x>
+     <y>450</y>
      <width>151</width>
      <height>31</height>
     </rect>
@@ -208,7 +208,7 @@
    <property name="geometry">
     <rect>
      <x>180</x>
-     <y>470</y>
+     <y>490</y>
      <width>201</width>
      <height>51</height>
     </rect>
@@ -233,7 +233,7 @@
    <property name="geometry">
     <rect>
      <x>390</x>
-     <y>470</y>
+     <y>490</y>
      <width>211</width>
      <height>51</height>
     </rect>
@@ -257,8 +257,8 @@
   <widget class="QPushButton" name="btnEliminarProfesor">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>430</y>
+     <x>420</x>
+     <y>450</y>
      <width>151</width>
      <height>31</height>
     </rect>
@@ -277,6 +277,35 @@
    </property>
    <property name="text">
     <string>eliminar profesor</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="ID">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>250</y>
+     <width>371</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>High Jakarta</family>
+     <pointsize>26</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>ID:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="InputID">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>250</y>
+     <width>81</width>
+     <height>51</height>
+    </rect>
    </property>
   </widget>
  </widget>
