@@ -1,15 +1,20 @@
 
 
 
-from db.database import crear_tablas
-from servicios.falta_servicio import registrar_falta_servicio
-from repositorio.falta_repo import listar_faltas, eliminar_faltas
-from servicios.profesor_servicio import registrar_profesor_servicio
-from repositorio.profesor_repo import listar_profesores, editar_profesor, eliminar_profesor
-from servicios.alumno_servicio import registrar_alumno_servicio
-from repositorio.alumno_repo import listar_alumnos, editar_alumno, eliminar_alumno
-from servicios.materia_servicio import registrar_materia_servicio
-from repositorio.materia_repo import listar_materias, editar_materia, eliminar_materia
+from db.database import crear_tablas, conectar
+
+
+from repositorio.profesor_repo import ProfesorRepositorio
+from servicios.profesor_servicio import ProfesorServicio
+
+from repositorio.alumno_repo import AlumnoRepositorio
+from servicios.alumno_servicio import AlumnoServicio
+
+from repositorio.materia_repo import MateriaRepositorio
+from servicios.materia_servicio import MateriaServicio
+
+from repositorio.falta_repo import FaltaRepositorio
+from servicios.falta_servicio import FaltaServicio
 
 
 
@@ -58,11 +63,11 @@ def menu_profesores():
             apellido = input("Apellido: ")
             correo = input ("Correo: ")
         
-            exito, mensaje = registrar_profesor_servicio(dni, nombre, apellido, correo)
+            exito, mensaje = profesor_servicio.agregar(dni, nombre, apellido, correo)
             print(mensaje)
 
         elif opc == "2":
-            profesores = listar_profesores()
+            profesores = profesor_servicio.listar()
             for p in profesores:
                 print(p)
 
@@ -71,11 +76,11 @@ def menu_profesores():
             nombre = input("Nuevo Nombre: ")
             apellido = input("Nuevo Apellido: ")
             correo = input("Nuevo Correo: ")
-            editar_profesor(id, nombre, apellido, correo)
+            profesor_servicio.editar(id, nombre, apellido, correo)
 
         elif opc == "4":
             id = input("ID a eliminar: ")
-            eliminar_profesor(id)
+            profesor_servicio.eliminar(id)
         
         elif opc == "0":
             break
@@ -101,12 +106,12 @@ def menu_alumnos():
             apellido = input("Apellido: ")
             correo = input ("Correo: ")
 
-            exito, mensaje = registrar_alumno_servicio(dni, nombre, apellido, correo)
+            exito, mensaje = alumno_servicio.agregar(dni, nombre, apellido, correo)
             print(mensaje)
 
 
         elif opc == "2":
-            alumnos = listar_alumnos()
+            alumnos = alumno_servicio.listar()
             for a in alumnos:
                 print(a)
 
@@ -115,11 +120,11 @@ def menu_alumnos():
             nombre = input("Nuevo Nombre: ")
             apellido = input("Nuevo Apellido: ")
             correo = input("Nuevo Correo: ")
-            editar_alumno(id, nombre, apellido, correo)
+            alumno_servicio.editar(id, nombre, apellido, correo)
 
         elif opc == "4":
             id = input("ID a eliminar: ")
-            eliminar_alumno(id)
+            alumno_servicio.eliminar(id)
         
         elif opc == "0":
             break
@@ -132,8 +137,7 @@ def menu_materias():
         print("--- Menu Materias ---")
         print("1 - Agregar Materia")
         print("2 - Listar Materia")
-        print("3 - Editar Materia")
-        print("4 - Eliminar Materia")
+        print("3 - Eliminar Materia")
         print("0 - Volver")
         print("============================")
 
@@ -143,24 +147,18 @@ def menu_materias():
             nombre = input("Nombre Materia: ")
             profesor_id = input("Profesor_id: ")
         
-            exito, mensaje = registrar_materia_servicio(nombre, profesor_id)
+            exito, mensaje = materia_servicio.agregar_materia(nombre, profesor_id)
             print(mensaje)
 
         
         elif opc == "2":
-            materias = listar_materias()
+            materias = materia_servicio.listar_materias()
             for m in materias:
                 print(m)
 
         elif opc == "3":
-            id = input("ID de Materia a editar: ")
-            nombre = input("Nombre Materia: ")
-            profesor_id = input("Profesor_id: ")
-            editar_materia(id, nombre, profesor_id)
-
-        elif opc == "4":
             id = input("ID de Materia a eliminar: ")
-            eliminar_materia(id)
+            materia_servicio.eliminar_materia(id)
         
         elif opc == "0":
             break
@@ -181,20 +179,26 @@ def menu_faltas():
         opc = input("\nOpcion: ")
 
         if opc == "1":
-            materias = listar_materias()
+            materias = materia_servicio.listar_materias()
             print("\nMaterias Disponibles: ")
             for m in materias:
                 print(m)
 
-            materia_id = input("ID de Materia: ")
+            profesor_id = int(input("ID del Profesor: "))
+            materia_id = int(input("ID de Materia: "))
             fecha = input("Fecha (YYYY/MM/DD): ")
-            motivo = str(input("Motivo de la Falta: "))
+            motivo = input("Motivo de la Falta: ")
 
-            exito, mensaje = registrar_falta_servicio(materia_id, fecha, motivo)
+            exito, mensaje = falta_servicio.registrar_falta(
+                profesor_id,
+                materia_id,
+                fecha,
+                motivo
+            )
             print(mensaje)
 
         elif opc == "2":
-            faltas = listar_faltas()
+            faltas = falta_servicio.listar_falta()
 
             print("\n=========== LISTA DE FALTAS ===========")
 
@@ -211,7 +215,7 @@ def menu_faltas():
 
         elif opc == "3":
             id = input("ID de Falta a Eliminar: ")
-            eliminar_faltas(id)
+            falta_servicio.eliminar_falta(id)
         
         elif opc == "0":
             break
@@ -221,5 +225,20 @@ def menu_faltas():
 
 
 if __name__ == "__main__":
+    
     crear_tablas()
+    conexion = conectar()
+    conexion.execute("PRAGMA foreign_keys = ON")
+
+    profesor_repo = ProfesorRepositorio(conexion)
+    alumno_repo = AlumnoRepositorio(conexion)
+    materia_repo = MateriaRepositorio(conexion)
+    falta_repo = FaltaRepositorio(conexion)
+
+    profesor_servicio = ProfesorServicio(profesor_repo)
+    alumno_servicio = AlumnoServicio(alumno_repo)
+    falta_servicio = FaltaServicio(falta_repo)
+    materia_servicio = MateriaServicio(materia_repo)
+
     menu_principal()
+    conexion.close()

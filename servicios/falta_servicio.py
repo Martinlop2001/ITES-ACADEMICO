@@ -1,17 +1,22 @@
 
 
-from repositorio.falta_repo import (
-    registrar_falta,
-    obtener_falta_por_materia_y_fecha,
-    obtener_materia_por_id
-)
 
-def registrar_falta_servicio(materia_id, fecha, motivo):
-    if not obtener_materia_por_id(materia_id):
-        return False, "La materia no existe."
+class FaltaServicio:
+    def __init__(self, repositorio):
+        self.repositorio = repositorio
 
-    if obtener_falta_por_materia_y_fecha(materia_id, fecha):
-        return False, "Ya existe una falta registrada para esa materia en la misma fecha."
+    def registrar_falta(self, profesor_id, materia_id, fecha, motivo):
 
-    registrar_falta(materia_id, fecha, motivo)
-    return True, "Falta registrada correctamente."
+        if not fecha:
+            raise ValueError("El campo 'fecha' no puede estar vacio.")
+
+        if not motivo:
+            raise ValueError("El campo 'motivo' no puede estar vacio.")
+
+        self.repositorio.registrar(profesor_id, materia_id, fecha, motivo)
+
+    def listar_falta(self):
+        return self.repositorio.listar()
+
+    def eliminar_falta(self, id):
+        self.repositorio.eliminar(id)

@@ -1,18 +1,25 @@
 
 
 
-from repositorio.alumno_repo import(
-    agregar_alumno,
-    obtener_alumno_por_dni,
-)
 
-def registrar_alumno_servicio(dni, nombre, apellido, correo):
-    if obtener_alumno_por_dni(dni):
-        return False, "Invalido, ya existe un alumno con ese DNI"
+class AlumnoServicio:
+    def __init__(self, alumno_repo):
+        self.alumno_repo = alumno_repo
+    
+    def agregar(self, dni, nombre, apellido, correo):
 
-    if not dni or not nombre or not apellido:
-        return False, "No se permiten campos vacios en DNI - Nomkbre - Apellido."
+        try:
+            if not dni or not nombre or not apellido:
+                return False, "No se permiten campos vacios en DNI - Nomkbre - Apellido."
+            
+            alumnos = self.alumno_repo.listar()
 
-    agregar_alumno(dni, nombre, apellido, correo)
+            for a in alumnos:
+                if a[1] == dni:
+                    return False, "Ya existe un alumno con ese mismo DNI..."
 
-    return True, "Alumno agregado correctamente!"
+            self.alumno_repo.agregar(dni, nombre, apellido, correo)
+            return True, "Alumno agregado correctamente."
+
+        except Exception as a:
+            return False, f"Ocurrio un error. {a}"

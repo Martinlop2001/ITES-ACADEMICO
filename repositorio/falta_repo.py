@@ -2,71 +2,43 @@
 
 
 from db.database import conectar
-
-def registrar_falta(materia_id, fecha, motivo):
-    conexion = conectar()
-    cursor = conexion.cursor()
-
-    cursor.execute("""
-        INSERT INTO falta (materia_id, fecha, motivo)
-        VALUES (?, ?, ?)
-    """, (materia_id, fecha, motivo))
-
-    conexion.commit()
-    conexion.close()
+import sqlite3
 
 
-def obtener_falta_por_materia_y_fecha(materia_id, fecha):
-    conexion = conectar()
-    cursor = conexion.cursor()
+class FaltaRepositorio:
+    def __init__(self, conexion):
+        self.conexion = conectar()
 
-    cursor.execute("""
-        SELECT * FROM falta 
-        WHERE materia_id = ? AND fecha = ?
-    """, (materia_id, fecha))
+    def registrar(self, profesor_id, materia_id, fecha, motivo):
+        try:
+            cursor = self.conexion.cursor()
+            cursor.execute("""
+            INSERT INTO falta (profesor_id, materia_id, fecha, motivo)
+            VALUES (?, ?, ?, ?)""", (profesor_id, materia_id, fecha, motivo))
+            self.conexion.commit()
 
-    resultado = cursor.fetchone()
-    conexion.close()
-    return resultado
+        except sqlite3.Error as e:
+            raise Exception(f"Error al registrar falta. {e}")
 
+    def listar(self):
+        cursor = self.conexion.cursor()
+        cursor.execute("""
+        SELECT f.id,
+                m.nombre AS materia,
+                p.nombre || ' ' || p.apellido AS profesor,
+                f.fecha,
+                f.motivo,
+            FROM falta f
+            JOIN profesor p ON f.profesor_id = p.id,
+            JOIN materia m ON f.materia_id = m.id
+        """)
+        return cursor.fetchall()
 
-def obtener_materia_por_id(materia_id):
-    conexion = conectar()
-    cursor = conexion.cursor()
+    def eliminar(self, id):
+        try:
+            cursor = self.conexion.cursor()
+            cursor.execute("DELETE FROM falta WHERE id = ?", (id,))
+            self.conexion.commit()
 
-    cursor.execute("SELECT * FROM materia WHERE id = ?", (materia_id,))
-    resultado = cursor.fetchone()
-
-    conexion.close()
-    return resultado
-
-
-def listar_faltas():
-    conexion = conectar()
-    cursor = conexion.cursor()
-
-    cursor.execute("""
-        SELECT 
-            falta.id,
-            profesor.nombre || ' ' || profesor.apellido,
-            materia.nombre,
-            falta.fecha,
-            falta.motivo
-        FROM falta
-        JOIN materia ON falta.materia_id = materia.id
-        JOIN profesor ON materia.profesor_id = profesor.id
-    """)
-
-    faltas = cursor.fetchall()
-    conexion.close()
-    return faltas
-
-
-def eliminar_faltas(id):
-    conexion = conectar()
-    cursor = conexion.cursor()
-
-    cursor.execute("DELETE FROM falta WHERE id = ?", (id,))
-
-    conexion.commit()
-    conexion.close()
+        except sqlite3.Error as e:
+            raise Exception(f"Error al eliminar falta. {e}")

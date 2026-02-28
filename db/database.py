@@ -32,18 +32,20 @@ def crear_tablas():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS materia (
         id INTEGER PRIMARY KEY,
-        nombre TEXT,
-        profesor_id INTEGER,
+        nombre TEXT NOT NULL,
+        profesor_id INTEGER NOT NULL,
         FOREIGN KEY (profesor_id) REFERENCES profesor(id)
     )
     """)
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS falta (
-        id INTEGER PRIMARY KEY,
-        materia_id INTEGER,
-        fecha TEXT,
-        motivo TEXT,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        profesor_id INTEGER NOT NULL,
+        materia_id INTEGER NOT NULL,
+        fecha TEXT NOT NULL,
+        motivo TEXT NOT NULL,
+        FOREIGN KEY (profesor_id) REFERENCES profesor(id),
         FOREIGN KEY (materia_id) REFERENCES materia(id)
     )
     """)

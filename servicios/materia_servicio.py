@@ -1,18 +1,18 @@
 
 
 
-from repositorio.materia_repo import(
-    agregar_materia,
-    obtener_materia_por_nombre
-)
 
-def registrar_materia_servicio(nombre, profesor_id):
-    if obtener_materia_por_nombre(nombre):
-        return False, "ya existe una materia con ese nombre."
+class MateriaServicio:
+    def __init__(self, repositorio):
+        self.repositorio = repositorio
 
-    if not nombre:
-        return False, "El nombre es obligatorio!"
+    def agregar_materia(self, nombre, profesor_id):
+        if not nombre:
+            raise ValueError("El campo nombre no debe de estar vacio.")
+        self.repositorio.agregar(nombre, profesor_id)
 
-    agregar_materia(nombre, profesor_id)
-    return True, "Materia agregada correctamente."
+    def listar_materias(self):
+        return self.repositorio.listar()
 
+    def eliminar_materia(self, id):
+        self.repositorio.eliminar(id)
