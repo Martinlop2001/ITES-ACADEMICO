@@ -7,12 +7,23 @@ class MateriaServicio:
         self.repositorio = repositorio
 
     def agregar_materia(self, nombre, profesor_id):
-        if not nombre:
-            raise ValueError("El campo nombre no debe de estar vacio.")
-        self.repositorio.agregar(nombre, profesor_id)
+        try:
+            if not nombre:
+                return False, "El campo nombre no debe de estar vacio."
+            if not profesor_id:
+                return False, "El campo profesor_id no debe de estar vacio."
+
+            self.repositorio.agregar(nombre, profesor_id)
+            return True, "Materia registrada correctamente."
+        except Exception as e:
+            return False, f"Ocurrio un error {e}"
 
     def listar_materias(self):
         return self.repositorio.listar()
 
     def eliminar_materia(self, id):
-        self.repositorio.eliminar(id)
+        try:
+            self.repositorio.eliminar(id)
+            return True, "Materia eliminada correctamente."
+        except Exception as e:
+            return False, f"Ocurrio un error {e}"

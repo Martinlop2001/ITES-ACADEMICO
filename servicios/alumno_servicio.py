@@ -10,7 +10,7 @@ class AlumnoServicio:
 
         try:
             if not dni or not nombre or not apellido:
-                return False, "No se permiten campos vacios en DNI - Nomkbre - Apellido."
+                return False, "No se permiten campos vacios en DNI - Nombre - Apellido."
             
             alumnos = self.alumno_repo.listar()
 
@@ -23,3 +23,13 @@ class AlumnoServicio:
 
         except Exception as a:
             return False, f"Ocurrio un error. {a}"
+    
+    def listar(self):
+        return self.alumno_repo.listar()
+
+    def editar(self, id, dni, nombre, apellido, correo):
+        return self.alumno_repo.editar(id, dni, nombre, apellido, correo)
+
+    def eliminar(self, id):
+        return self.alumno_repo.eliminar(id)
+    

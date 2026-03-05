@@ -73,10 +73,11 @@ def menu_profesores():
 
         elif opc == "3":
             id = input("ID a editar: ")
+            dni = input("Nuevo DNI: ")
             nombre = input("Nuevo Nombre: ")
             apellido = input("Nuevo Apellido: ")
             correo = input("Nuevo Correo: ")
-            profesor_servicio.editar(id, nombre, apellido, correo)
+            profesor_servicio.editar(id, dni, nombre, apellido, correo)
 
         elif opc == "4":
             id = input("ID a eliminar: ")
@@ -117,10 +118,11 @@ def menu_alumnos():
 
         elif opc == "3":
             id = input("ID a editar: ")
+            dni = input("Nuevo DNI: ")
             nombre = input("Nuevo Nombre: ")
             apellido = input("Nuevo Apellido: ")
             correo = input("Nuevo Correo: ")
-            alumno_servicio.editar(id, nombre, apellido, correo)
+            alumno_servicio.editar(id, dni, nombre, apellido, correo)
 
         elif opc == "4":
             id = input("ID a eliminar: ")
@@ -179,13 +181,20 @@ def menu_faltas():
         opc = input("\nOpcion: ")
 
         if opc == "1":
-            materias = materia_servicio.listar_materias()
-            print("\nMaterias Disponibles: ")
-            for m in materias:
-                print(m)
+            print("\n--- PROFESORES DISPONIBLES ---")
+            profesores = profesor_servicio.listar()
+            for p in profesores:
+                print(f"ID: {p[0]} - {p[2]} {p[3]}")
 
-            profesor_id = int(input("ID del Profesor: "))
-            materia_id = int(input("ID de Materia: "))
+            print("\n--- MATERIAS DISPONIBLES ---")
+            materias = materia_servicio.listar_materias()
+            for m in materias:
+                print(f"ID: {m[0]} - {m[1]}")
+
+            print("\n--------------------------------------")
+
+            profesor_id = input("ID del Profesor: ")
+            materia_id = input("ID de Materia: ")
             fecha = input("Fecha (YYYY/MM/DD): ")
             motivo = input("Motivo de la Falta: ")
 

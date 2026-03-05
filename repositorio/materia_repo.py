@@ -7,7 +7,7 @@ import sqlite3
 
 class MateriaRepositorio:
     def __init__(self, conexion):
-        self.conexion = conectar()
+        self.conexion = conexion
 
     def agregar(self, nombre, profesor_id):
         try:
@@ -26,14 +26,14 @@ class MateriaRepositorio:
         cursor.execute("""
         SELECT m.id, m.nombre, p.nombre, p.apellido
         FROM materia m
-        JOIN profesor p ON m.profesor_id = profesor.id
+        JOIN profesor p ON m.profesor_id = p.id
         """)
-        return cursor.fetchall
+        return cursor.fetchall()
 
     def eliminar(self, id):
         try:
             cursor = self.conexion.cursor()
-            cursor.execute("DALETE FROM materia WHERE id = ?", (id,))
+            cursor.execute("DELETE FROM materia WHERE id = ?", (id,))
             self.conexion.commit()
         
         except sqlite3.Error as e:

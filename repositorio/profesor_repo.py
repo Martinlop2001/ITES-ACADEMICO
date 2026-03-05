@@ -1,13 +1,10 @@
-
-
-
 from db.database import conectar
 import sqlite3
 
 
 class ProfesorRepositorio:
     def __init__(self, conexion):
-        self.conexion = conectar()
+        self.conexion = conexion
 
     def agregar(self, dni, nombre, apellido, correo):
         try:
@@ -30,14 +27,14 @@ class ProfesorRepositorio:
         except sqlite3.Error as e:
             raise Exception(f"Error al listar profesores: {e}")
 
-    def editar(self, id, nombre, apellido, correo):
+    def editar(self, id, dni, nombre, apellido, correo):
         try:
             cursor = self.conexion.cursor()
             cursor.execute("""
             UPDATE profesor
-            SET nombre = ?, apellido = ?, correo = ?
+            SET dni = ?, nombre = ?, apellido = ?, correo = ?
             WHERE id = ?
-            """, (nombre, apellido, correo, id))
+            """, (dni, nombre, apellido, correo, id))
             self.conexion.commit()
 
         except sqlite3.Error as e:
@@ -50,4 +47,4 @@ class ProfesorRepositorio:
             self.conexion.commit()
 
         except sqlite3.Error as e:
-            raise Exception(f"Error nal eliminar profesor: {e}")
+            raise Exception(f"Error al eliminar profesor: {e}")

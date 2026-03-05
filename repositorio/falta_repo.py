@@ -7,11 +7,12 @@ import sqlite3
 
 class FaltaRepositorio:
     def __init__(self, conexion):
-        self.conexion = conectar()
+        self.conexion = conexion
 
     def registrar(self, profesor_id, materia_id, fecha, motivo):
         try:
             cursor = self.conexion.cursor()
+
             cursor.execute("""
             INSERT INTO falta (profesor_id, materia_id, fecha, motivo)
             VALUES (?, ?, ?, ?)""", (profesor_id, materia_id, fecha, motivo))
@@ -23,14 +24,15 @@ class FaltaRepositorio:
     def listar(self):
         cursor = self.conexion.cursor()
         cursor.execute("""
-        SELECT f.id,
-                m.nombre AS materia,
-                p.nombre || ' ' || p.apellido AS profesor,
-                f.fecha,
-                f.motivo,
-            FROM falta f
-            JOIN profesor p ON f.profesor_id = p.id,
-            JOIN materia m ON f.materia_id = m.id
+        SELECT
+            f.id,
+            p.nombre || ' ' || p.apellido AS profesor,
+            m.nombre AS materia,
+            f.fecha,
+            f.motivo
+        FROM falta f
+        JOIN profesor p ON f.profesor_id = p.id
+        JOIN materia m ON f.materia_id = m.id
         """)
         return cursor.fetchall()
 
