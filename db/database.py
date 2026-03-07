@@ -21,7 +21,7 @@ def crear_tablas():
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS alumno (
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         dni TEXT UNIQUE,
         nombre TEXT,
         apellido TEXT,
@@ -41,14 +41,28 @@ def crear_tablas():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS falta (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        profesor_id INTEGER NOT NULL,
-        materia_id INTEGER NOT NULL,
-        fecha TEXT NOT NULL,
-        motivo TEXT NOT NULL,
+        alumno_id INTEGER,
+        profesor_id INTEGER,
+        materia_id INTEGER,
+        fecha TEXT,
+        motivo TEXT,
+        FOREIGN KEY (alumno_id) REFERENCES alumno(id),
         FOREIGN KEY (profesor_id) REFERENCES profesor(id),
         FOREIGN KEY (materia_id) REFERENCES materia(id)
     )
     """)
 
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS usuario (
+    id INTEGER PRIMARY KEY,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    rol TEXT NOT NULL,
+    referencia_id INTEGER
+    )
+    """)
+
+    
     conexion.commit()
     conexion.close()

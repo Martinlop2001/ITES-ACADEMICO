@@ -50,3 +50,8 @@ class AlumnoRepositorio:
 
         except sqlite3.Error as e:
             raise Exception(f"Error al eliminar alumno. {e}")
+
+    def obtener_por_dni(self, dni):
+        cursor = self.conexion.cursor()
+        cursor.execute("SELECT * FROM alumno WHERE dni = ?", (dni,))
+        return cursor.fetchone()

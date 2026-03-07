@@ -33,3 +33,5 @@ class AlumnoServicio:
     def eliminar(self, id):
         return self.alumno_repo.eliminar(id)
     
+    def obtener_por_dni(self, dni):
+        return self.alumno_repo.obtener_por_dni(dni)

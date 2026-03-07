@@ -1,8 +1,9 @@
 
 
 
-from db.database import crear_tablas, conectar
 
+
+from db.database import crear_tablas, conectar
 
 from repositorio.profesor_repo import ProfesorRepositorio
 from servicios.profesor_servicio import ProfesorServicio
@@ -16,18 +17,164 @@ from servicios.materia_servicio import MateriaServicio
 from repositorio.falta_repo import FaltaRepositorio
 from servicios.falta_servicio import FaltaServicio
 
+from repositorio.usuario_repo import UsuarioRepositorio
+from servicios.usuario_servicio import UsuarioServicio
 
 
-def menu_principal():
+# ================= LOGIN =================
+
+def iniciar_sesion(usuario_servicio):
+
+    username = input("Usuario: ")
+    password = input("Contraseña: ")
+
+    success, mensaje, usuario = usuario_servicio.login(username, password)
+
+    print(mensaje)
+
+    if success:
+        rol = usuario[3]
+
+        if rol == "admin":
+            menu_admin()
+
+        elif rol == "profesor":
+            menu_profesor(usuario)
+
+        elif rol == "alumno":
+            menu_alumno(usuario)
+
+
+# ================= MENUS POR ROL =================
+
+def registrar_falta(profesor_id):
+
+    print("\n--- REGISTRAR FALTA ---")
+
+    print("\nAlumnos disponibles:")
+    alumnos = alumno_servicio.listar()
+    for a in alumnos:
+        print(f"ID: {a[0]} - {a[2]} {a[3]}")
+
+    print("\nMaterias disponibles:")
+    materias = materia_servicio.listar_materias()
+    for m in materias:
+        print(f"ID: {m[0]} - {m[1]}")
+
+    alumno_id = input("ID del Alumno: ")
+    materia_id = input("ID de la Materia: ")
+    fecha = input("Fecha (YYYY-MM-DD): ")
+    motivo = input("Motivo: ")
+
+    exito, mensaje = falta_servicio.registrar_falta(
+        alumno_id,
+        profesor_id,
+        materia_id,
+        fecha,
+        motivo
+    )
+
+    print(mensaje)
+
+
+def menu_profesor(usuario):
+
+    profesor_id = usuario[4]
+
+    while True:
+
+        print("\n=== MENU PROFESOR ===")
+        print("1 - Registrar falta")
+        print("2 - Ver faltas registradas")
+        print("0 - Cerrar sesión")
+
+        opcion = input("Opcion: ")
+
+        if opcion == "1":
+            registrar_falta(profesor_id)
+
+        elif opcion == "2":
+
+            faltas = falta_servicio.listar_falta()
+
+            for f in faltas:
+                print(f)
+
+        elif opcion == "0":
+            break
+
+
+def menu_alumno(usuario):
+    alumno_id = usuario[4]
+
+    while True:
+        print("\n=== MENU ALUMNO ===")
+        print("1 - Ver mis faltas")
+        print("0 - Cerrar sesión")
+
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+
+            faltas = falta_servicio.listar_falta(alumno_id)
+
+            if not faltas:
+                print("No tenés faltas registradas.")
+            else:
+                print("\nID | Materia | Fecha | Motivo")
+                print("--------------------------------")
+
+                for f in faltas:
+                    print(f)
+
+        elif opcion == "0":
+            break
+
+        else:
+            print("Opción inválida.")
+
+
+# ======================== MENU DE INICIO =========================
+
+def menu_inicio():
     while True:
         print("============================")
-        print("--- Ites Academico ---")
-        print("1 - Gestion Profesores")
-        print("2 - Gestion Alumnos")        
-        print("3 - Gestion Materias")
-        print("4 - Consultar Faltas")
+        print("1 - Iniciar Sesión")
+        print("2 - Registrarse como Alumno")
         print("0 - Salir")
-        print("============================")        
+        print("============================")
+
+        opc = input("Opcion: ")
+
+        if opc == "1":
+            iniciar_sesion(usuario_servicio)
+
+        elif opc == "2":
+            dni = input("DNI: ")
+            nombre = input("Nombre: ")
+            apellido = input("Apellido: ")
+            correo = input("Correo: ")
+            username = input("Username: ")
+            password = input("Password: ")
+
+            exito, mensaje = usuario_servicio.registrar_alumno(dni, nombre, apellido, correo, username, password)
+            print(mensaje)
+
+        elif opc == "0":
+            break
+
+
+# ================= MENU PRINCIPAL (ADMIN) =================
+
+def menu_admin():
+    while True:
+        print("\n=== MENU ADMIN ===")
+        print("1 - Gestionar profesores")
+        print("2 - Gestionar alumnos")
+        print("3 - Gestionar materias")
+        print("4 - Gestionar faltas")
+        print("5 - Crear usuario profesor")
+        print("0 - Cerrar sesión")
 
         opc = input("Seleccione una opcion: ")
 
@@ -39,10 +186,28 @@ def menu_principal():
             menu_materias()
         elif opc == "4":
             menu_faltas()
+
+        elif opc == "5":
+
+            profesor_servicio.listar()
+
+            profesor_id = input("ID del profesor: ")
+            username = input("Username: ")
+            password = input("Password: ")
+
+            exito, mensaje = usuario_servicio.registrar_profesor(
+                username,
+                password,
+                profesor_id
+            )
+
+            print(mensaje)
+
         elif opc == "0":
             break
 
 
+# ================= SUBMENUS PARA ADMIN =================
 
 def menu_profesores():
     while True:
@@ -61,8 +226,8 @@ def menu_profesores():
             dni = input("DNI: ")
             nombre = input("Nombre: ")
             apellido = input("Apellido: ")
-            correo = input ("Correo: ")
-        
+            correo = input("Correo: ")
+
             exito, mensaje = profesor_servicio.agregar(dni, nombre, apellido, correo)
             print(mensaje)
 
@@ -82,10 +247,9 @@ def menu_profesores():
         elif opc == "4":
             id = input("ID a eliminar: ")
             profesor_servicio.eliminar(id)
-        
+
         elif opc == "0":
             break
-
 
 
 def menu_alumnos():
@@ -105,11 +269,10 @@ def menu_alumnos():
             dni = input("DNI: ")
             nombre = input("Nombre: ")
             apellido = input("Apellido: ")
-            correo = input ("Correo: ")
+            correo = input("Correo: ")
 
             exito, mensaje = alumno_servicio.agregar(dni, nombre, apellido, correo)
             print(mensaje)
-
 
         elif opc == "2":
             alumnos = alumno_servicio.listar()
@@ -127,10 +290,9 @@ def menu_alumnos():
         elif opc == "4":
             id = input("ID a eliminar: ")
             alumno_servicio.eliminar(id)
-        
+
         elif opc == "0":
             break
-
 
 
 def menu_materias():
@@ -148,11 +310,10 @@ def menu_materias():
         if opc == "1":
             nombre = input("Nombre Materia: ")
             profesor_id = input("Profesor_id: ")
-        
+
             exito, mensaje = materia_servicio.agregar_materia(nombre, profesor_id)
             print(mensaje)
 
-        
         elif opc == "2":
             materias = materia_servicio.listar_materias()
             for m in materias:
@@ -161,11 +322,9 @@ def menu_materias():
         elif opc == "3":
             id = input("ID de Materia a eliminar: ")
             materia_servicio.eliminar_materia(id)
-        
+
         elif opc == "0":
             break
-
-
 
 
 def menu_faltas():
@@ -190,8 +349,6 @@ def menu_faltas():
             materias = materia_servicio.listar_materias()
             for m in materias:
                 print(f"ID: {m[0]} - {m[1]}")
-
-            print("\n--------------------------------------")
 
             profesor_id = input("ID del Profesor: ")
             materia_id = input("ID de Materia: ")
@@ -218,23 +375,20 @@ def menu_faltas():
                 print(f"Materia: {f[2]}")
                 print(f"Fecha: {f[3]}")
                 print(f"Motivo: {f[4]}")
-
-            print("----------------------------------------")
-
+                print("----------------------------------------")
 
         elif opc == "3":
             id = input("ID de Falta a Eliminar: ")
             falta_servicio.eliminar_falta(id)
-        
+
         elif opc == "0":
             break
 
 
-
-
+# ================= EJECUCION =================
 
 if __name__ == "__main__":
-    
+
     crear_tablas()
     conexion = conectar()
     conexion.execute("PRAGMA foreign_keys = ON")
@@ -243,11 +397,16 @@ if __name__ == "__main__":
     alumno_repo = AlumnoRepositorio(conexion)
     materia_repo = MateriaRepositorio(conexion)
     falta_repo = FaltaRepositorio(conexion)
+    usuario_repo = UsuarioRepositorio(conexion)
 
     profesor_servicio = ProfesorServicio(profesor_repo)
     alumno_servicio = AlumnoServicio(alumno_repo)
-    falta_servicio = FaltaServicio(falta_repo)
     materia_servicio = MateriaServicio(materia_repo)
+    falta_servicio = FaltaServicio(falta_repo)
+    usuario_servicio = UsuarioServicio(usuario_repo, alumno_servicio)
 
-    menu_principal()
+    usuario_servicio.crear_admin_inicial()
+
+    menu_inicio()
+
     conexion.close()
