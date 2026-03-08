@@ -2,8 +2,6 @@
 
 
 
-import sqlite3
-
 class MateriaRepositorio:
     def __init__(self, conexion):
         self.conexion = conexion
@@ -13,11 +11,11 @@ class MateriaRepositorio:
             cursor = self.conexion.cursor()
             cursor.execute("""
             INSERT INTO materia (nombre, profesor_id)
-            VALUES (?, ?)
+            VALUES (%s, %s)
             """, (nombre, profesor_id))
             self.conexion.commit()
         
-        except sqlite3.Error as e:
+        except Exception as e:
             raise Exception(f"Error al agregar materia.{e}")
 
     def listar(self):
@@ -32,9 +30,9 @@ class MateriaRepositorio:
     def eliminar(self, id):
         try:
             cursor = self.conexion.cursor()
-            cursor.execute("DELETE FROM materia WHERE id = ?", (id,))
+            cursor.execute("DELETE FROM materia WHERE id = %s", (id,))
             self.conexion.commit()
         
-        except sqlite3.Error as e:
+        except Exception as e:
             raise Exception(f"Error al eliminar materia. {e}")
 

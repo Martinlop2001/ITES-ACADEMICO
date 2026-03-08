@@ -10,13 +10,13 @@ class UsuarioRepositorio:
         cursor = self.conexion.cursor()
         cursor.execute("""
         INSERT INTO usuario (username, password, rol, referencia_id)
-        VALUES (?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s)
         """, (username, password_hash, rol, referencia_id))
         self.conexion.commit()
 
     def obtener_por_username(self, username):
         cursor = self.conexion.cursor()
-        cursor.execute("SELECT * FROM usuario WHERE username = ?", (username,))
+        cursor.execute("SELECT * FROM usuario WHERE username = %s", (username,))
         return cursor.fetchone()
 
     def listar(self):

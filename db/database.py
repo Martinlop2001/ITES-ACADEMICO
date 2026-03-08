@@ -2,10 +2,17 @@
 
 
 
-import sqlite3
+import psycopg2
 
 def conectar():
-    return sqlite3.connect("ites_academico.db")
+
+    return psycopg2.connect(
+        host="localhost",
+        port=5432,
+        dbname="ites_academico",
+        user="postgres",
+        password="3239"
+    )
 
 def crear_tablas():
     conexion = conectar()
@@ -13,28 +20,28 @@ def crear_tablas():
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS profesor (
-        id INTEGER PRIMARY KEY,
-        dni TEXT UNIQUE,
-        nombre TEXT,
-        apellido TEXT,
-        correo TEXT
+        id SERIAL PRIMARY KEY,
+        dni VARCHAR(50) UNIQUE,
+        nombre VARCHAR(100),
+        apellido VARCHAR(100),
+        correo VARCHAR(150)
     )
     """)
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS alumno (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        dni TEXT UNIQUE,
-        nombre TEXT,
-        apellido TEXT,
-        correo TEXT
+        id SERIAL PRIMARY KEY,
+        dni VARCHAR(50) UNIQUE,
+        nombre VARCHAR(100),
+        apellido VARCHAR(100),
+        correo VARCHAR(150)
     )
     """)
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS materia (
-        id INTEGER PRIMARY KEY,
-        nombre TEXT NOT NULL,
+        id SERIAL PRIMARY KEY,
+        nombre VARCHAR(150) NOT NULL,
         profesor_id INTEGER NOT NULL,
         FOREIGN KEY (profesor_id) REFERENCES profesor(id) ON DELETE CASCADE
     )
@@ -42,7 +49,7 @@ def crear_tablas():
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS falta (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         alumno_id INTEGER,
         profesor_id INTEGER,
         materia_id INTEGER,
@@ -57,11 +64,11 @@ def crear_tablas():
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS usuario (
-    id INTEGER PRIMARY KEY,
-    username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    rol TEXT NOT NULL,
-    referencia_id INTEGER
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(100) UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        rol VARCHAR(50) NOT NULL,
+        referencia_id INTEGER
     )
     """)
 

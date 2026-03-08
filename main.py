@@ -464,7 +464,6 @@ if __name__ == "__main__":
 
     crear_tablas()
     conexion = conectar()
-    conexion.execute("PRAGMA foreign_keys = ON")
 
     profesor_repo = ProfesorRepositorio(conexion)
     alumno_repo = AlumnoRepositorio(conexion)

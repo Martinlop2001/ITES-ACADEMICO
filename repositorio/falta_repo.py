@@ -2,8 +2,6 @@
 
 
 
-import sqlite3
-
 class FaltaRepositorio:
     def __init__(self, conexion):
         self.conexion = conexion
@@ -14,7 +12,7 @@ class FaltaRepositorio:
 
         cursor.execute("""
             INSERT INTO falta (alumno_id, profesor_id, materia_id, fecha, motivo)
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s)
         """, (alumno_id, profesor_id, materia_id, fecha, motivo))
 
         self.conexion.commit()
@@ -42,7 +40,7 @@ class FaltaRepositorio:
             SELECT f.id, m.nombre, f.fecha, f.motivo
             FROM falta f
             JOIN materia m ON f.materia_id = m.id
-            WHERE f.alumno_id = ?
+            WHERE f.alumno_id = %s
         """, (alumno_id,))
 
         return cursor.fetchall()
@@ -50,8 +48,8 @@ class FaltaRepositorio:
     def eliminar(self, id):
         try:
             cursor = self.conexion.cursor()
-            cursor.execute("DELETE FROM falta WHERE id = ?", (id,))
+            cursor.execute("DELETE FROM falta WHERE id = %s", (id,))
             self.conexion.commit()
 
-        except sqlite3.Error as e:
+        except Exception as e:
             raise Exception(f"Error al eliminar falta. {e}")
