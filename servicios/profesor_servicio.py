@@ -29,10 +29,17 @@ class ProfesorServicio:
 
     def editar(self, id, dni, nombre, apellido, correo):
         try:
-            return self.profesor_repo.editar(id, dni, nombre, apellido, correo)
+            self.profesor_repo.editar(id, dni, nombre, apellido, correo)
+            return True, "Datos editados correctamente."
         except Exception as e:
-            return False, f"Ocurrio un error {e}"
+            return False, f"Ocurrio un error al editar profesor: {e}"
     
     def eliminar(self, id):
-        return self.profesor_repo.eliminar(id)
-    
+        try:
+            self.profesor_repo.eliminar(id)
+            return True, "Profesor eliminado correctamente."
+        except Exception as e:
+            return False, f"No se pudo eliminar el profesor. Verifique que no tenga materias o faltas asociadas. Detalle: {e}"
+
+    def obtener_por_id(self, id):
+        return self.profesor_repo.obtener_por_id(id)

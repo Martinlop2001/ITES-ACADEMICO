@@ -9,5 +9,3 @@ class Faltas:
         self.materia_id = materia_id
         self.fecha = fecha
         self.motivo = motivo
-    
-    

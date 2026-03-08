@@ -1,9 +1,8 @@
 
 
 
-from db.database import conectar
-import sqlite3
 
+import sqlite3
 
 class MateriaRepositorio:
     def __init__(self, conexion):

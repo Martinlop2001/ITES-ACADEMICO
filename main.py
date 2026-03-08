@@ -2,7 +2,6 @@
 
 
 
-
 from db.database import crear_tablas, conectar
 
 from repositorio.profesor_repo import ProfesorRepositorio
@@ -238,15 +237,40 @@ def menu_profesores():
 
         elif opc == "3":
             id = input("ID a editar: ")
-            dni = input("Nuevo DNI: ")
-            nombre = input("Nuevo Nombre: ")
-            apellido = input("Nuevo Apellido: ")
-            correo = input("Nuevo Correo: ")
-            profesor_servicio.editar(id, dni, nombre, apellido, correo)
+            profesor = profesor_servicio.obtener_por_id(id)
+
+            if not profesor:
+                print("No existe un profesor con ese ID.")
+                continue
+
+            dni_actual = profesor[1]
+            nombre_actual = profesor[2]
+            apellido_actual = profesor[3]
+            correo_actual = profesor[4]
+
+            dni = input(f"Nuevo DNI ({dni_actual}): ") or dni_actual
+            nombre = input(f"Nuevo nombre ({nombre_actual}): ") or nombre_actual
+            apellido = input(f"Nuevo apellido ({apellido_actual}): ") or apellido_actual
+            correo = input(f"Nuevo correo ({correo_actual}): ") or correo_actual
+
+            exito, mensaje = profesor_servicio.editar(id, dni, nombre, apellido, correo)
+            print(mensaje)
 
         elif opc == "4":
             id = input("ID a eliminar: ")
-            profesor_servicio.eliminar(id)
+            profesor = profesor_servicio.obtener_por_id(id)
+
+            if not profesor:
+                print("No existe un profesor con ese ID.")
+                continue
+
+            confirmar = input(f"Esta accion eliminara al profesor {profesor[2]} {profesor[3]} y todas sus materias y faltas asociadas. ¿Seguro que deseas continuar? (s/n): ").lower()
+            if confirmar != "s":
+                print("Operacion cancelada.")
+                continue
+
+            exito, mensaje = profesor_servicio.eliminar(id)
+            print(mensaje)
 
         elif opc == "0":
             break
@@ -281,15 +305,40 @@ def menu_alumnos():
 
         elif opc == "3":
             id = input("ID a editar: ")
-            dni = input("Nuevo DNI: ")
-            nombre = input("Nuevo Nombre: ")
-            apellido = input("Nuevo Apellido: ")
-            correo = input("Nuevo Correo: ")
-            alumno_servicio.editar(id, dni, nombre, apellido, correo)
+            alumno = alumno_servicio.obtener_por_id(id)
+
+            if not alumno:
+                print("No existe un alumno con ese ID.")
+                continue
+
+            dni_actual = alumno[1]
+            nombre_actual = alumno[2]
+            apellido_actual = alumno[3]
+            correo_actual = alumno[4]
+
+            dni = input(f"Nuevo DNI ({dni_actual}): ") or dni_actual
+            nombre = input(f"Nuevo nombre ({nombre_actual}): ") or nombre_actual
+            apellido = input(f"Nuevo apellido ({apellido_actual}): ") or apellido_actual
+            correo = input(f"Nuevo correo ({correo_actual}): ") or correo_actual
+
+            exito, mensaje = alumno_servicio.editar(id, dni, nombre, apellido, correo)
+            print(mensaje)
 
         elif opc == "4":
             id = input("ID a eliminar: ")
-            alumno_servicio.eliminar(id)
+            alumno = alumno_servicio.obtener_por_id(id)
+
+            if not alumno:
+                print("No existe un alumno con ese ID.")
+                continue
+
+            confirmar = input(f"Esta accion eliminara al alumno {alumno[2]} {alumno[3]} y todas sus faltas asociadas. ¿Seguro que deseas continuar? (s/n): ").lower()
+            if confirmar != "s":
+                print("Operacion cancelada.")
+                continue
+
+            exito, mensaje = alumno_servicio.eliminar(id)
+            print(mensaje)
 
         elif opc == "0":
             break
@@ -321,7 +370,20 @@ def menu_materias():
 
         elif opc == "3":
             id = input("ID de Materia a eliminar: ")
-            materia_servicio.eliminar_materia(id)
+            materias = materia_servicio.listar_materias()
+            materia_encontrada = next((m for m in materias if str(m[0]) == id), None)
+
+            if not materia_encontrada:
+                print("No existe una materia con ese ID.")
+                continue
+
+            confirmar = input(f"Esta accion eliminara la materia {materia_encontrada[1]} y todas sus faltas asociadas. ¿Seguro que deseas continuar? (s/n): ").lower()
+            if confirmar != 's':
+                print("Operacion cancelada.")
+                continue
+
+            exito, mensaje = materia_servicio.eliminar_materia(id)
+            print(mensaje)
 
         elif opc == "0":
             break
@@ -340,22 +402,27 @@ def menu_faltas():
         opc = input("\nOpcion: ")
 
         if opc == "1":
+            print("\n--- ALUMNOS DISPONIBLES ---")
+            alumnos = alumno_servicio.listar()
+            for a in alumnos:
+                print(f"ID: {a[0]} - {a[2]} {a[3]}")
             print("\n--- PROFESORES DISPONIBLES ---")
             profesores = profesor_servicio.listar()
             for p in profesores:
                 print(f"ID: {p[0]} - {p[2]} {p[3]}")
-
             print("\n--- MATERIAS DISPONIBLES ---")
             materias = materia_servicio.listar_materias()
             for m in materias:
                 print(f"ID: {m[0]} - {m[1]}")
 
+            alumno_id = input("ID del Alumno: ")
             profesor_id = input("ID del Profesor: ")
             materia_id = input("ID de Materia: ")
             fecha = input("Fecha (YYYY/MM/DD): ")
             motivo = input("Motivo de la Falta: ")
 
             exito, mensaje = falta_servicio.registrar_falta(
+                alumno_id,
                 profesor_id,
                 materia_id,
                 fecha,
@@ -379,7 +446,13 @@ def menu_faltas():
 
         elif opc == "3":
             id = input("ID de Falta a Eliminar: ")
-            falta_servicio.eliminar_falta(id)
+            confirmar = input(f"Esta accion eliminara la falta con ID {id}. ¿Seguro que deseas continuar? (s/n): ").lower()
+            if confirmar != "s":
+                print("Operacion cancelada.")
+                continue
+
+            exito, mensaje = falta_servicio.eliminar_falta(id)
+            print(mensaje)
 
         elif opc == "0":
             break

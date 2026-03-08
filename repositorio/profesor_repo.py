@@ -1,6 +1,8 @@
-from db.database import conectar
-import sqlite3
 
+
+
+
+import sqlite3
 
 class ProfesorRepositorio:
     def __init__(self, conexion):
@@ -48,3 +50,8 @@ class ProfesorRepositorio:
 
         except sqlite3.Error as e:
             raise Exception(f"Error al eliminar profesor: {e}")
+
+    def obtener_por_id(self, id):
+        cursor = self.conexion.cursor()
+        cursor.execute("SELECT * FROM profesor WHERE id = ?", (id,))
+        return cursor.fetchone()

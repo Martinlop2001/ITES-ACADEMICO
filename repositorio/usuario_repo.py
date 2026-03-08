@@ -1,6 +1,7 @@
 
 
 
+
 class UsuarioRepositorio:
     def __init__(self, conexion):
         self.conexion = conexion

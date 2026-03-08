@@ -1,8 +1,8 @@
 
 
-from db.database import conectar
-import sqlite3
 
+
+import sqlite3
 
 class AlumnoRepositorio:
     def __init__(self, conexion):
@@ -54,4 +54,9 @@ class AlumnoRepositorio:
     def obtener_por_dni(self, dni):
         cursor = self.conexion.cursor()
         cursor.execute("SELECT * FROM alumno WHERE dni = ?", (dni,))
+        return cursor.fetchone()
+    
+    def obtener_por_id(self, id):
+        cursor = self.conexion.cursor()
+        cursor.execute("SELECT * FROM alumno WHERE id = ?", (id,))
         return cursor.fetchone()

@@ -28,10 +28,21 @@ class AlumnoServicio:
         return self.alumno_repo.listar()
 
     def editar(self, id, dni, nombre, apellido, correo):
-        return self.alumno_repo.editar(id, dni, nombre, apellido, correo)
+        try:
+            self.alumno_repo.editar(id, dni, nombre, apellido, correo)
+            return True, "Datos editados correctamente."
+        except Exception as e:
+            return False, f"Ocurrio un error al editar alumno: {e}"
 
     def eliminar(self, id):
-        return self.alumno_repo.eliminar(id)
+        try:
+            self.alumno_repo.eliminar(id)
+            return True, "Alumno eliminado correctamente."
+        except Exception as e:
+            return False, f"No se pudo eliminar el alumno. Verifique que no tenga faltas asociadas. Detalle: {e}"
     
     def obtener_por_dni(self, dni):
         return self.alumno_repo.obtener_por_dni(dni)
+    
+    def obtener_por_id(self, id):
+        return self.alumno_repo.obtener_por_id(id)

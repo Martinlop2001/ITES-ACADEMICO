@@ -1,5 +1,7 @@
 
 
+
+
 import sqlite3
 
 def conectar():
@@ -34,7 +36,7 @@ def crear_tablas():
         id INTEGER PRIMARY KEY,
         nombre TEXT NOT NULL,
         profesor_id INTEGER NOT NULL,
-        FOREIGN KEY (profesor_id) REFERENCES profesor(id)
+        FOREIGN KEY (profesor_id) REFERENCES profesor(id) ON DELETE CASCADE
     )
     """)
 
@@ -46,9 +48,9 @@ def crear_tablas():
         materia_id INTEGER,
         fecha TEXT,
         motivo TEXT,
-        FOREIGN KEY (alumno_id) REFERENCES alumno(id),
-        FOREIGN KEY (profesor_id) REFERENCES profesor(id),
-        FOREIGN KEY (materia_id) REFERENCES materia(id)
+        FOREIGN KEY (alumno_id) REFERENCES alumno(id) ON DELETE CASCADE,
+        FOREIGN KEY (profesor_id) REFERENCES profesor(id) ON DELETE CASCADE,
+        FOREIGN KEY (materia_id) REFERENCES materia(id) ON DELETE CASCADE
     )
     """)
 
@@ -63,6 +65,5 @@ def crear_tablas():
     )
     """)
 
-    
     conexion.commit()
     conexion.close()

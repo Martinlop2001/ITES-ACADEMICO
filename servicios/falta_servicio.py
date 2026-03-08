@@ -3,10 +3,8 @@
 
 
 class FaltaServicio:
-
     def __init__(self, repositorio):
         self.repositorio = repositorio
-
 
     def registrar_falta(self, alumno_id, profesor_id, materia_id, fecha, motivo):
         try:

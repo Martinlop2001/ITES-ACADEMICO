@@ -1,6 +1,7 @@
 
 
 
+
 class Usuario:
     def __init__(self, username, password, rol, referencia_id=None):
         self.username = username
