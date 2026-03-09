@@ -1,7 +1,3 @@
-
-
-
-
 class MateriaServicio:
     def __init__(self, repositorio):
         self.repositorio = repositorio
@@ -20,6 +16,12 @@ class MateriaServicio:
 
     def listar_materias(self):
         return self.repositorio.listar()
+
+    def listar_materias_por_profesor(self, profesor_id):
+        return self.repositorio.listar_por_profesor(profesor_id)
+
+    def obtener_por_id(self, id):
+        return self.repositorio.obtener_por_id(id)
 
     def eliminar_materia(self, id):
         try:

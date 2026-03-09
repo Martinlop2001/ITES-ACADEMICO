@@ -45,6 +45,17 @@ class FaltaRepositorio:
 
         return cursor.fetchall()
 
+    def listar_por_profesor(self, profesor_id):
+        cursor = self.conexion.cursor()
+        cursor.execute("""
+            SELECT f.id, a.nombre || ' ' || a.apellido AS alumno, m.nombre AS materia, f.fecha, f.motivo
+            FROM falta f
+            JOIN alumno a ON f.alumno_id = a.id
+            JOIN materia m ON f.materia_id = m.id
+            WHERE f.profesor_id = %s
+        """, (profesor_id,))
+        return cursor.fetchall()
+
     def eliminar(self, id):
         try:
             cursor = self.conexion.cursor()

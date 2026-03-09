@@ -27,6 +27,18 @@ class MateriaRepositorio:
         """)
         return cursor.fetchall()
 
+    def listar_por_profesor(self, profesor_id):
+        cursor = self.conexion.cursor()
+        cursor.execute("""
+        SELECT id, nombre FROM materia WHERE profesor_id = %s
+        """, (profesor_id,))
+        return cursor.fetchall()
+
+    def obtener_por_id(self, id):
+        cursor = self.conexion.cursor()
+        cursor.execute("SELECT * FROM materia WHERE id = %s", (id,))
+        return cursor.fetchone()
+
     def eliminar(self, id):
         try:
             cursor = self.conexion.cursor()

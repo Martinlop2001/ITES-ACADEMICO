@@ -24,13 +24,13 @@ class FaltaServicio:
         except Exception as e:
             return False, f"Ocurrio un error {e}"
 
-    def listar_falta(self, alumno_id=None):
+    def listar_falta(self, alumno_id=None, profesor_id=None):
         try:
             if alumno_id:
                 return self.repositorio.listar_por_alumno(alumno_id)
-            else:
-                return self.repositorio.listar()
-
+            if profesor_id is not None:
+                return self.repositorio.listar_por_profesor(profesor_id)
+            return self.repositorio.listar()
         except Exception as e:
             print(f"Error al listar faltas: {e}")
             return []

@@ -1,7 +1,6 @@
 
 
 
-
 from db.database import crear_tablas, conectar
 
 from repositorio.profesor_repo import ProfesorRepositorio
@@ -18,6 +17,8 @@ from servicios.falta_servicio import FaltaServicio
 
 from repositorio.usuario_repo import UsuarioRepositorio
 from servicios.usuario_servicio import UsuarioServicio
+
+from servicios.email_servicio import EmailServicio
 
 
 # ================= LOGIN =================
@@ -476,6 +477,7 @@ if __name__ == "__main__":
     materia_servicio = MateriaServicio(materia_repo)
     falta_servicio = FaltaServicio(falta_repo)
     usuario_servicio = UsuarioServicio(usuario_repo, alumno_servicio)
+    email_servicio   = EmailServicio()
 
     usuario_servicio.crear_admin_inicial()
 
