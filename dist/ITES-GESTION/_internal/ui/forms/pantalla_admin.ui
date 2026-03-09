@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PantallaAdmin</class>
+ <widget class="QWidget" name="PantallaAdmin">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ITES Académico</string>
+  </property>
+  <widget class="QLabel" name="lbl_fondo">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>600</width>
+     <height>500</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_profesores">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>200</y>
+     <width>181</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string>QPushButton { background-color: #1a1a2e; color: white; border-radius: 6px; min-height: 44px; }
+QPushButton:hover { background-color: #16213e; }</string>
+   </property>
+   <property name="text">
+    <string>Gestión profesores</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_alumnos">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>250</y>
+     <width>181</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string>QPushButton { background-color: #1a1a2e; color: white; border-radius: 6px; min-height: 44px; }
+QPushButton:hover { background-color: #16213e; }</string>
+   </property>
+   <property name="text">
+    <string>Gestión alumnos</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_materias">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>300</y>
+     <width>181</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string>QPushButton { background-color: #1a1a2e; color: white; border-radius: 6px; min-height: 44px; }
+QPushButton:hover { background-color: #16213e; }</string>
+   </property>
+   <property name="text">
+    <string>Gestión materias</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_faltas">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>350</y>
+     <width>181</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string>QPushButton { background-color: #1a1a2e; color: white; border-radius: 6px; min-height: 44px; }
+QPushButton:hover { background-color: #16213e; }</string>
+   </property>
+   <property name="text">
+    <string>Gestión faltas</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_crear_profesor">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>400</y>
+     <width>181</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string>QPushButton { background-color: #1a1a2e; color: white; border-radius: 6px; min-height: 44px; }
+QPushButton:hover { background-color: #16213e; }</string>
+   </property>
+   <property name="text">
+    <string>Crear usuario profesor</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_cerrar">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>440</y>
+     <width>101</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string>QPushButton { background-color: #6c757d; color: white; border-radius: 6px; min-height: 44px; }
+QPushButton:hover { background-color: #5a6268; }</string>
+   </property>
+   <property name="text">
+    <string>Cerrar sesión</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
